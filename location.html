@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Port Elgin Biryani</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.html">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="location.html">Location</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="order.html">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="feedback.html">Feedback</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Location Section -->
+    <div class="container mt-5">
+        <h1>Location & Hours</h1>
+        <div id="map" class="mb-4">
+            <!-- Embed your location map here -->
+            <iframe src="https://www.google.com/maps/embed?pb=https://www.google.ca/maps/place/Walmart+Supercentre/@44.4224193,-81.397692,17z/data=!3m1!4b1!4m6!3m5!1s0x4cce6a48fa1e9d0f:0xc17b1d2bfcc76ea5!8m2!3d44.4224155!4d-81.3951171!16s%2Fg%2F1tvgvzkx?entry=ttu" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+
+        <h2>Operational Hours</h2>
+        <div id="hoursDisplay" class="mb-4">
+            <p id="hoursText">Loading operational hours...</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="promptForPassword()">Update Operational Hours</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start">
+        <div class="text-center p-3">
+            &copy; 2024 Restaurant. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Initialize operational hours
+        const hours = {
+            opening: 'Monday-Friday: 9am - 9pm',
+            closing: 'Saturday-Sunday: 10am - 8pm'
+        };
+
+        function updateHoursDisplay() {
+            document.getElementById('hoursText').innerText = `${hours.opening}, ${hours.closing}`;
+        }
+
+        function saveHours() {
+            const openingHours = document.getElementById('openingHours').value;
+            const closingHours = document.getElementById('closingHours').value;
+
+            // Update the hours object
+            hours.opening = openingHours;
+            hours.closing = closingHours;
+
+            // Update the display
+            updateHoursDisplay();
+
+            // Close the modal
+            $('#updateHoursModal').modal('hide');
+        }
+
+        function promptForPassword() {
+            const password = prompt('Enter the password to update operational hours:');
+            if (password === 'Abu&jan678') {
+                showUpdateHoursModal();
+            } else {
+                alert('Incorrect password.');
+            }
+        }
+
+        function showUpdateHoursModal() {
+            const updateHoursModal = `
+                <div class="modal fade" id="updateHoursModal" tabindex="-1" role="dialog" aria-labelledby="updateHoursModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateHoursModalLabel">Update Operational Hours</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="updateHoursForm">
+                                    <div class="form-group">
+                                        <label for="openingHours">Opening Hours</label>
+                                        <input type="text" class="form-control" id="openingHours" placeholder="e.g., Monday-Friday: 9am - 9pm" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="closingHours">Closing Hours</label>
+                                        <input type="text" class="form-control" id="closingHours" placeholder="e.g., Saturday-Sunday: 10am - 8pm" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="saveHours()">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', updateHoursModal);
+            $('#updateHoursModal').modal('show');
+        }
+
+        // Initialize the display with default hours
+        updateHoursDisplay();
+    </script>
+</body>
+</html>

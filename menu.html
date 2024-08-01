@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Ordering System</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .cart-item button {
+            margin-left: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .menu-item-img {
+            max-width: 100%;
+            height: auto;
+        }
+        .total-amount, .order-number {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .modal-content {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Port Elgin Biryani</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" >Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.html" >Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="location.html">Location</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="order.html">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="feedback.html">Feedback</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Menu Section -->
+    <div id="menu" class="container mt-5">
+        <h1>Menu</h1>
+        <div class="row">
+            <!-- Menu items with fixed image URLs -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="https://www.mistay.in/travel-blog/content/images/2020/07/hyderbadi-biriyani-1.jpg" class="card-img-top menu-item-img" id="img-item1" alt="Item 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Item 1</h5>
+                        <p class="card-text">$10</p>
+                        <input type="number" id="quantity-item1" class="form-control" value="1" min="1" style="width: 100px;">
+                        <button class="btn btn-primary mt-2" onclick="addToCart('Item 1', 10, document.getElementById('quantity-item1').value)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="https://www.saltandtamarind.com/wp-content/uploads/2017/08/IMG_5752.jpg" class="card-img-top menu-item-img" id="img-item2" alt="Item 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Item 2</h5>
+                        <p class="card-text">$15</p>
+                        <input type="number" id="quantity-item2" class="form-control" value="1" min="1" style="width: 100px;">
+                        <button class="btn btn-primary mt-2" onclick="addToCart('Item 2', 15, document.getElementById('quantity-item2').value)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="https://www.shutterstock.com/image-photo/indian-cuisine-homemade-cucumber-raita-260nw-1138986920.jpg" class="card-img-top menu-item-img" id="img-item3" alt="Item 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Item 3</h5>
+                        <p class="card-text">$20</p>
+                        <input type="number" id="quantity-item3" class="form-control" value="1" min="1" style="width: 100px;">
+                        <button class="btn btn-primary mt-2" onclick="addToCart('Item 3', 20, document.getElementById('quantity-item3').value)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>Cart</h2>
+        <ul id="cartList" class="list-group mb-3"></ul>
+        <div class="form-group">
+            <label for="tipAmount">Add a Tip ($)</label>
+            <input type="number" id="tipAmount" class="form-control" min="0" step="0.01" placeholder="Enter tip amount">
+        </div>
+        <p id="totalAmount" class="total-amount"></p>
+        <div class="center-button">
+            <button class="btn btn-primary" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Order Details Section -->
+    <div id="details" class="container mt-5 hidden">
+        <h1>Order Details</h1>
+        <form>
+            <div class="form-group">
+                <label for="deliveryOption">Delivery Option</label>
+                <select class="form-control" id="deliveryOption" onchange="toggleAddressField()">
+                    <option value="pickup">Pickup</option>
+                    <option value="delivery">Delivery</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="customerName">Name</label>
+                <input type="text" class="form-control" id="customerName" required>
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Telephone</label>
+                <input type="tel" class="form-control" id="customerPhone" required>
+            </div>
+            <div class="form-group">
+                <label for="customerEmail">Email</label>
+                <input type="email" class="form-control" id="customerEmail" required>
+            </div>
+            <div class="form-group hidden" id="deliveryAddressGroup">
+                <label for="customerAddress">Delivery Address</label>
+                <input type="text" class="form-control" id="customerAddress">
+            </div>
+            <div class="center-button">
+                <button type="button" class="btn btn-primary" onclick="submitDetails()">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Payment Section -->
+    <div id="payment" class="container mt-5 hidden">
+        <h1>Payment</h1>
+        <form>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentOption" id="paypal" value="paypal" checked>
+                <label class="form-check-label" for="paypal">
+                    PayPal
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentOption" id="electronic" value="electronic">
+                <label class="form-check-label" for="electronic">
+                    Electronic Transfer
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentOption" id="creditDebit" value="creditDebit">
+                <label class="form-check-label" for="creditDebit">
+                    Credit or Debit Card
+                </label>
+            </div>
+            <p id="paymentTotalAmount" class="total-amount"></p>
+            <div id="paymentMessage" class="hidden mt-3"></div>
+            <div class="center-button">
+                <button type="button" class="btn btn-primary mt-3" onclick="proceedToPayment()">Proceed to Payment</button>
+            </div>
+            <div class="center-button mt-3">
+                <button type="button" class="btn btn-secondary" onclick="showSection('menu')">Back to Menu</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Card Payment Section -->
+    <div id="cardPayment" class="container mt-5 hidden">
+        <h1>Credit or Debit Card Payment</h1>
+        <form onsubmit="submitCardPayment(event)">
+            <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" class="form-control" id="cardNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="cardExpiry">Expiry Date (MM/YY)</label>
+                <input type="text" class="form-control" id="cardExpiry" required>
+            </div>
+            <div class="form-group">
+                <label for="cardCVC">CVC</label>
+                <input type="text" class="form-control" id="cardCVC" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Payment</button>
+        </form>
+    </div>
+
+    <!-- Modal for Order Number -->
+    <div class="modal fade" id="orderNumberModal" tabindex="-1" role="dialog" aria-labelledby="orderNumberModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderNumberModalLabel">Order Number</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="orderNumberMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        let cart = [];
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function addToCart(item, price, quantity) {
+            cart.push({ item, price, quantity });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartList = document.getElementById('cartList');
+            cartList.innerHTML = '';
+            cart.forEach((cartItem, index) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item cart-item';
+                li.innerHTML = `${cartItem.item} - $${cartItem.price} x ${cartItem.quantity} <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>`;
+                cartList.appendChild(li);
+            });
+            updateTotalAmount();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function updateTotalAmount() {
+            let total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            const tip = parseFloat(document.getElementById('tipAmount').value) || 0;
+            total += tip;
+            document.getElementById('totalAmount').textContent = `Total Amount: $${total.toFixed(2)}`;
+            document.getElementById('paymentTotalAmount').textContent = `Total Amount: $${total.toFixed(2)}`;
+        }
+
+        function proceedToCheckout() {
+            showSection('details');
+        }
+
+        function toggleAddressField() {
+            const deliveryOption = document.getElementById('deliveryOption').value;
+            document.getElementById('deliveryAddressGroup').classList.toggle('hidden', deliveryOption !== 'delivery');
+        }
+
+        function submitDetails() {
+            showSection('payment');
+            updateTotalAmount(); // Ensure total amount is updated
+        }
+
+        function proceedToPayment() {
+            const paymentOption = document.querySelector('input[name="paymentOption"]:checked').value;
+            const email = document.getElementById('customerEmail').value;
+            if (paymentOption === 'creditDebit') {
+                showSection('cardPayment');
+            } else {
+                const paymentMessage = `Please make your payment via PayPal or Electronic Transfer to zaibgull@outlook.com or 438-878-6263.`;
+                document.getElementById('paymentMessage').textContent = paymentMessage;
+                document.getElementById('paymentMessage').classList.remove('hidden');
+                showOrderNumberPopup();
+            }
+        }
+
+        function submitCardPayment(event) {
+            event.preventDefault();
+            // Here you would handle the credit/debit card payment submission
+            showOrderNumberPopup();
+        }
+
+        function showOrderNumberPopup() {
+            const orderNumber = 'ORD-' + Math.floor(Math.random() * 1000000);
+            document.getElementById('orderNumberMessage').textContent = `Your unique order number is: ${orderNumber}`;
+            $('#orderNumberModal').modal('show');
+            sendOrderDetails(orderNumber);
+        }
+
+        function sendOrderDetails(orderNumber) {
+            const email = document.getElementById('customerEmail').value;
+            const cartDetails = cart.map(item => `${item.item}: $${item.price} x ${item.quantity}`).join(', ');
+            const tip = parseFloat(document.getElementById('tipAmount').value) || 0;
+            const totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0) + tip;
+
+            const orderDetails = {
+                to: email,
+                from: 'zaibgull@outlook.com',
+                subject: 'Order Confirmation',
+                body: `Thank you for your order!\n\nOrder Number: ${orderNumber}\nItems: ${cartDetails}\nTip: $${tip.toFixed(2)}\nTotal Amount: $${totalAmount.toFixed(2)}\n\nWe have also sent the details to our email.`,
+            };
+
+            // This is a placeholder for sending the email. Implement your email sending logic here.
+            console.log('Sending email to:', orderDetails.to);
+            console.log('Email details:', orderDetails);
+        }
+    </script>
+</body>
+</html>

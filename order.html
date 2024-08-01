@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Port Elgin Biryani</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.html">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="location.html">Location</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="order.html">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="feedback.html">Feedback</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Order Section -->
+    <div class="container" id="order">
+        <h1>Place Your Order</h1>
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="customerName">Name</label>
+                <input type="text" class="form-control" id="customerName" required>
+            </div>
+            <div class="form-group">
+                <label for="items">Items</label>
+                <input type="text" class="form-control" id="items" required>
+            </div>
+            <div class="form-group">
+                <label for="totalPrice">Total Price</label>
+                <input type="number" class="form-control" id="totalPrice" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </form>
+        <div id="orderResponse"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start">
+        <div class="text-center p-3">
+            &copy; 2024 Restaurant. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const customerName = document.getElementById('customerName').value;
+            const items = document.getElementById('items').value;
+            const totalPrice = document.getElementById('totalPrice').value;
+
+            fetch('/api/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ customerName, items, totalPrice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('orderResponse').innerText = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    <script src="order.js"></script>
+</body>
+</html>
